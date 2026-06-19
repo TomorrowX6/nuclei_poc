@@ -1,0 +1,33 @@
+id: unauth-java-message-broker-detect
+
+info:
+  name: Unauthenticated Java Message Broker - Detect
+  author: matejsmycka
+  severity: low
+  description: |
+    Detection of a Java Message Service (JMS) broker, typically used by Oracle GlassFish Message Queue and Payara Application Server. This port should remain closed to the internet, as it enables unauthenticated access to messaging services.
+  metadata:
+    verified: true
+    shodan-query: product:"Java Message Service"
+  tags: network,tcp,jms,openmq,unauth
+
+tcp:
+  - inputs:
+      - data: "\n"
+
+    host:
+      - "{{Hostname}}"
+    port: 7676
+
+    matchers:
+      - type: word
+        words:
+          - "101 imqbroker"
+          - "cluster_discovery"
+        condition: and
+
+    extractors:
+      - type: regex
+        regex:
+          - "imqbroker ([0-9.]+)"
+# digest: 4b0a00483046022100ef7fca1d8cb0ac0bdacaf7b7d0c90de1e3a07cdefa690fd0b5431fac8e4ac457022100eecb637a4ae6983ca887f52d4217163d2cb7afd3b06bb9bd1a82b5ba7269e2e8:922c64590222798bb761d5b6d8e72950
